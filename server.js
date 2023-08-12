@@ -4,12 +4,14 @@ const morgan = require("morgan");
 const path = require('path')
 const connetDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes')
+const cors = require("cors");
 
 dotenv.config()
 connetDB()
 
 const app = express();
 app.use(morgan("dev"));
+app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 const port = process.env.PORT || 5000;
