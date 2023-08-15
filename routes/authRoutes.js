@@ -4,16 +4,16 @@ const {
   loginController,
   userProfile,
   updateProfile,
-  forgotPasswordController,
-  updateProfilePicture
+  profilePicture
 } = require("../controllers/authController");
 const { requireSignIn } = require("../middlewares/authMiddleware");
+const upload = require("../utils/multer");
 const router = express.Router();
 
 router.post("/register", registerController);
 router.post("/login", loginController);
 router.get("/profile/:userId", requireSignIn, userProfile);
 router.put("/profile/:userId", requireSignIn, updateProfile);
-router.put("/updateprofilepicture/:userId", requireSignIn, updateProfilePicture);
+router.put("/profilepicture/:userId", requireSignIn,upload.single("profilePicture"), profilePicture);
 
 module.exports = router;
