@@ -3,23 +3,23 @@ const JWT = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
 const { hashPassword, comparePassword } = require("../utils/authhelper");
-const { uploadPicture } = require("../middlewares/uploadPicture");
-const { fileRemover } = require("../utils/fileRemover");
+const cloudinary = require('cloudinary')
 
 
 //REGISTER API
 
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINRY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINRY_API_KEY,
-//   api_secret: process.env.CLOUD_NAME,
-// })
+cloudinary.config({
+  cloud_name: "diwkbswnz",
+  api_key:  366464522325271,
+  api_secret: "UunZT6aGwS7xPkxdfT7j_H0vv5w",
+})
 
 
 const registerController = async (req, res) => {
   try {
     console.log(req.body);
-    const { name, email, password, answer } = req.body;
+    const { name, email, password } = req.body;
+    console.log(req.body)
     let user = await userModel.findOne({ email });
 
     if (user) {
@@ -34,7 +34,6 @@ const registerController = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      answer,
     });
 
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -48,6 +47,7 @@ const registerController = async (req, res) => {
       token
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       success: false,
       message: "Something went wrong in register",
@@ -173,68 +173,48 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// UPDATE PROFILE PICTURE
-
-const updateProfilePicture = async (req, res) => {
-  try{
-    const upload = uploadPicture.single("profilePicture");
-    const userId = req.params.userId;
-    upload(req, res, async function (err) {
-      if (err) {
-        console.log(err.message);
+// method two
+const profilePicture = async (req, res) => {
+    try{
+      console.log("Hii from controller");
+      const userId=req.params?.userId || null ;
+      let user = await userModel.findById(userId);
+      if (!user) {
         res.status(400).send({
           success: false,
-          message: "Error in updating profile picture",
-          err,
+          message: "User not found",
+          error,
         });
-      } else {
-        // every thing went well
-        if (req.file) {
-          let filename;
-          let updatedUser = await userModel.findById(userId);
-          filename = updatedUser.avatar;
-          if (filename) {
-            fileRemover(filename);
-          }
-          updatedUser.avatar = req.file.filename;
-          await updatedUser.save();
-          res.json({
-              success : true,
-              message :  "Profile updated..",
-              user : updatedUser
-          });
-        } else {
-          let filename;
-          let updatedUser = await userModel.findById(req.user._id);
-          filename = updatedUser.avatar;
-          updatedUser.avatar = "";
-          await updatedUser.save();
-          fileRemover(filename);
-          res.json({
-            success : true,
-            message :  "Profile updated..",
-            user : updatedUser
-        });
-        }
       }
+      const result = await cloudinary.uploader.upload(req.file.path, {folder : "/Blog-App/profile"}, {
+        public_id : userId,
+        overwrite :true ,
+      })
+      console.log(result.secure_url);
+      user = await userModel.findByIdAndUpdate(userId, {avatar : `${result.secure_url}`}).select("-password");
+      res.json({
+        success : true,
+        message :  "Profile updated..",
+        user : user
     });
-  }
-  catch (error) {
-    res.status(500).send({
-      success: false,
-      message: "Error in updating profile picture",
-      error,
-    });
-  }
-};
-
-// method two
-
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error in updating profile picture",
+        error,
+      });
+    }
+}
 
 module.exports = {
   registerController,
   loginController,
   userProfile,
   updateProfile,
-  updateProfilePicture,
+  profilePicture
 };
+
+
+
