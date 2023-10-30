@@ -24,25 +24,25 @@ const postSchema = new mongoose.Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "userModel",
+      ref: "users",
     },
     tags: {
       type: [String],
     },
-
+    
     Categories: [{ type: Schema.Types.ObjectId, ref: "postCategoriesModel" }],
     upvotes: {
       type: Number,
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true , toJSON : {virtuals : true}}
 );
 
 postSchema.virtual("comments", { 
     ref: "commentModel",
     localField : "_id",
-    foreignField:"postId",
+    foreignField:"post",
 });
-
-module.exports = mongoose.model("postModel", postSchema);
+const postModel =  mongoose.model("postModel", postSchema);
+module.exports = postModel;

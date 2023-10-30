@@ -1,8 +1,17 @@
 const express = require("express");
 const { requireSignIn } = require("../middlewares/authMiddleware");
-const { createPost } = require("../controllers/postController");
+const {
+  createPost,
+  updatePost,
+  deletePost,
+  getPost,
+  getAllPosts,
+} = require("../controllers/postController");
+const upload = require("../utils/multer");
 const router = express.Router();
-
-router.post('createpost', requireSignIn, createPost)
-
+router.post("/", requireSignIn, createPost);
+router.put("/:slug", requireSignIn, upload.single("postPicture"), updatePost);
+router.delete("/:slug ", requireSignIn, deletePost);
+router.get("/:slug", getPost);
+router.get("/", getAllPosts);
 module.exports = router;
