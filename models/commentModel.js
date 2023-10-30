@@ -3,7 +3,7 @@ const { Schema, default: mongoose } = require("mongoose");
 const commentSchema = new Schema({
     user : {
         type : Schema.Types.ObjectId,
-        ref : "userModel",
+        ref : "users",
         required: true
     },
     desc : {
@@ -14,7 +14,7 @@ const commentSchema = new Schema({
         required:[true,'Please add a description']
     },
 
-    postId : {
+    post : {
         type : Schema.Types.ObjectId,
         ref : "postModel",
         required : true
@@ -31,19 +31,19 @@ const commentSchema = new Schema({
 
     replyOnUser : {
         type : Schema.Types.ObjectId,
-        ref :"userModel",
+        ref :"users",
         default :null
     },
     vote : {
         type : Number,
         default : 0
     }
-}, {timestamps:true});
+}, {timestamps:true ,toJSON : {virtuals : true}});
 
 commentSchema.virtual("replies", { 
     ref: "commentModel",
     localField : "_id",
     foreignField: "parent",
 });
-
-module.exports = mongoose.model("commentModel", commentSchema);
+const commentModel = mongoose.model("commentModel", commentSchema);
+module.exports = commentModel;

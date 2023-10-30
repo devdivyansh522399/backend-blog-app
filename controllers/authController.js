@@ -176,7 +176,6 @@ const updateProfile = async (req, res) => {
 // method two
 const profilePicture = async (req, res) => {
     try{
-      console.log("Hii from controller");
       const userId=req.params?.userId || null ;
       let user = await userModel.findById(userId);
       if (!user) {
@@ -186,11 +185,10 @@ const profilePicture = async (req, res) => {
           error,
         });
       }
-      const result = await cloudinary.uploader.upload(req.file.path, {folder : "/Blog-App/profile"}, {
-        public_id : userId,
-        overwrite :true ,
-      })
-      console.log(result.secure_url);
+
+      const result = await cloudinary.uploader.upload(req.file.path, {folder : "/Blog-App/Profile"})
+      console.log(result);
+
       user = await userModel.findByIdAndUpdate(userId, {avatar : `${result.secure_url}`}).select("-password");
       res.json({
         success : true,

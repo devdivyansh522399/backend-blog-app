@@ -17,3 +17,4 @@ router.put("/profile/:userId", requireSignIn, updateProfile);
 router.put("/profilepicture/:userId", requireSignIn,upload.single("profilePicture"), profilePicture);
 
 module.exports = router;
+
