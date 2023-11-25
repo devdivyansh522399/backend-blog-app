@@ -167,7 +167,7 @@ const getAllPosts = async (req, res) => {
         path: "user",
         select: ["avatar", "name", "verified"],
       },
-    ]);
+    ]).sort({createdAt:-1}).limit(50);
     if (!post) {
       return res.status(400).send({
         success: false,
