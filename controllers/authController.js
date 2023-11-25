@@ -17,9 +17,7 @@ cloudinary.config({
 
 const registerController = async (req, res) => {
   try {
-    console.log(req.body);
     const { name, email, password } = req.body;
-    console.log(req.body)
     let user = await userModel.findOne({ email });
 
     if (user) {

@@ -15,12 +15,12 @@ const postSchema = new mongoose.Schema(
       required: [true, "Slug is required"],
     },
     body: {
-      type: Object,
+      type: String,
       required: [true, "Body is required"],
     },
     photo: {
       type: String,
-      required: true,
+      // required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
@@ -30,7 +30,8 @@ const postSchema = new mongoose.Schema(
       type: [String],
     },
     
-    Categories: [{ type: Schema.Types.ObjectId, ref: "postCategoriesModel" }],
+    category: [String],
+    
     upvotes: {
       type: Number,
       default: 0,
