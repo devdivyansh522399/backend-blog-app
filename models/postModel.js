@@ -30,7 +30,7 @@ const postSchema = new mongoose.Schema(
       type: [String],
     },
     
-    Categories: [String],
+    category: [String],
     upvotes: {
       type: Number,
       default: 0,

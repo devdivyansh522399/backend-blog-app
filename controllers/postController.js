@@ -1,4 +1,5 @@
 const postModel = require("../models/postModel");
+const userModel = require("../models/userModel")
 const cloudinary = require("cloudinary").v2;
 const v4 = require("uuid");
 const uuidv4 = v4.v4;
