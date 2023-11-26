@@ -11,7 +11,6 @@ cloudinary.config({
 });
 
 const createPost = async (req, res) => {
-  try {
     try {
       console.log(req.body);
       let user = await userModel.findById(req.body.userId);
@@ -45,8 +44,7 @@ const createPost = async (req, res) => {
             error,
         });
     }
-  }
-  
+};  
 
 const updatePost = async (req, res) => {
   try {
