@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = multer({
   storage: multer.diskStorage({
     filename : (req, file, cb) => {
-        cb(null, `${req.params.userId || req.params.slug}`)
+        cb(null, `${req.params.userId}${Date.now()}-${file.originalname}`)
     }
   }),
   fileFilter: (req, file, cb) => {

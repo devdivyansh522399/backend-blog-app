@@ -10,31 +10,43 @@ cloudinary.config({
   api_secret: "UunZT6aGwS7xPkxdfT7j_H0vv5w",
 });
 
-const createPost = async (req, res, next) => {
+const createPost = async (req, res) => {
   try {
-    const post = new postModel({
-      title: "sample title",
-      caption: "sample caption",
-      slug: uuidv4(),
-      body: {
-        type: "doc",
-        content: [],
-      },
-      photo: "",
-      user: req.user._id,
-    });
-
+    try {
+      console.log(req.body);
+      let user = await userModel.findById(req.body.userId);
+      if (!user) {
+        return res.status(400).send({
+          success: false,
+          message: "User not found",
+        });
+      }
+      console.log("Hi from post creation");
+      const result = await cloudinary.uploader.upload(req.file.path, {folder : `/Blog-App/Post/${user.name}${user._id}/`});
+      const post = new postModel({
+        title: req.body.title,
+        caption: req.body.caption,
+        slug: uuidv4(),
+        photo : result.secure_url,
+        body: req.body.Body,
+        user: req.body.userId,
+        tags : req.body.tags,
+        category : req.body.category
+      });
+  
     const createdPost = await post.save();
     return res.json(createdPost);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      success: false,
-      message: "Error in Creating Post",
-      error,
-    });
+  } 
+  catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            success: false,
+            message: "Error in Creating Post",
+            error,
+        });
+    }
   }
-};
+  
 
 const updatePost = async (req, res) => {
   try {

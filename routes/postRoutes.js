@@ -9,8 +9,8 @@ const {
 } = require("../controllers/postController");
 const upload = require("../utils/multer");
 const router = express.Router();
-router.post("/", requireSignIn, createPost);
-router.put("/:slug", requireSignIn, upload.single("postPicture"), updatePost);
+router.post("/", requireSignIn,upload.single("postPicture"), createPost);
+router.put("/:slug", requireSignIn, upload.singe("postPicture"), updatePost);
 router.delete("/:slug ", requireSignIn, deletePost);
 router.get("/:slug", getPost);
 router.get("/", getAllPosts);
