@@ -35,6 +35,8 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    public_id: String
+    
   },
   { timestamps: true , toJSON : {virtuals : true}}
 );
