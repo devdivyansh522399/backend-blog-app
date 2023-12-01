@@ -24,7 +24,6 @@ const createPost = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: `/Blog-App/Post/${user.name}${user._id}/`,
     });
-    console.log(result);
     const post = new postModel({
       title: req.body.title,
       caption: req.body.caption,
